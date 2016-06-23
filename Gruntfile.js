@@ -15,8 +15,8 @@ module.exports = function(grunt) {
           engine: 'im',
           sizes: [{
             /* Change these */
-            width: 800,
-            suffix: '_2x',
+            width: 400,
+            suffix: '_1x',
             quality: 30
           }]
         },
@@ -28,8 +28,8 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           src: ['*.{gif,jpg,png}'],
-          cwd: 'images_src/',
-          dest: 'images/'
+          cwd: 'img_src/',
+          dest: 'img/'
         }]
       }
     },
