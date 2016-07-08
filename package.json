@@ -24,7 +24,9 @@
     "grunt": "^1.0.1",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-imagemin": "^1.0.1",
     "grunt-mkdir": "^1.0.0",
-    "grunt-responsive-images": "^0.1.9"
+    "grunt-responsive-images": "^0.1.9",
+    "imagemin-mozjpeg": "^6.0.0"
   }
 }

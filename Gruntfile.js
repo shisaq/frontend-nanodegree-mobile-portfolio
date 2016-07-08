@@ -8,6 +8,8 @@
 
 module.exports = function(grunt) {
 
+  var mozjpeg = require('imagemin-mozjpeg');
+
   grunt.initConfig({
     responsive_images: {
       dev: {
@@ -50,12 +52,25 @@ module.exports = function(grunt) {
       },
     },
 
+    // image minify
+    imagemin: {                          // Task
+      dynamic: {                         // Another target
+        files: [{
+          expand: true,                  // Enable dynamic expansion
+          cwd: 'views/images/',          // Src matches are relative to this path
+          src: ['**/*.{png,jpg,gif}'],   // Actual patterns to match
+          dest: 'views/images/dist/'     // Destination path prefix
+        }]
+      }
+    }
+
   });
 
   grunt.loadNpmTasks('grunt-responsive-images');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-mkdir');
-  grunt.registerTask('default', ['clean', 'mkdir', 'responsive_images']);
+  grunt.loadNpmTasks('grunt-contrib-imagemin');
+  grunt.registerTask('default', ['clean', 'mkdir', 'responsive_images', 'grunt-contrib-imagemin']);
 
 };
