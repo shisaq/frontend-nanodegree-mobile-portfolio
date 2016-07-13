@@ -488,12 +488,19 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
+  // instead using document.querySelectorAll('.mover'), getElementsByClassName is much better
+  var items = document.getElementsByClassName('mover');
+  // instead calculating everytime in the for loop, cache (scrollTop / 1250)
+  var cachedScrollTop = document.body.scrollTop / 1250;
+  // phase is just 5 numbers. So cache them, too
+  var phase = [];
+  for (var i = 0; i < 5; i++) {
+    phase[i] = 100 * Math.sin(cachedScrollTop + i);
+  }
 
-  var items = document.querySelectorAll('.mover');
-  var cachedScrollTop = document.body.scrollTop;
   for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin((cachedScrollTop / 1250) + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+    // phase[i % 5] is used for picking the right cache of phase
+    items[i].style.left = items[i].basicLeft + phase[i % 5] + 'px';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -513,7 +520,8 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  for (var i = 0; i < 200; i++) {
+  // I think we don't need so many pizzas... 30 is enough...
+  for (var i = 0; i < 30; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
