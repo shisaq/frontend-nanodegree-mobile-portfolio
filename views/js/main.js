@@ -488,8 +488,6 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
-  // instead using document.querySelectorAll('.mover'), getElementsByClassName is much better
-  var items = document.getElementsByClassName('mover');
   // instead calculating everytime in the for loop, cache (scrollTop / 1250)
   var cachedScrollTop = document.body.scrollTop / 1250;
   // phase is just 5 numbers. So cache them, too
@@ -500,7 +498,8 @@ function updatePositions() {
 
   for (var i = 0; i < items.length; i++) {
     // phase[i % 5] is used for picking the right cache of phase
-    items[i].style.left = items[i].basicLeft + phase[i % 5] + 'px';
+    // change style.left to style.transform, and set the basic left inside DOMContentLoaded
+    items[i].style.transform = 'translateX(' + phase[i % 5] + 'px)';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -511,10 +510,21 @@ function updatePositions() {
     var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
     logAverageFrame(timesToUpdatePosition);
   }
+  window.animating = false;
+}
+
+// use requestAnimationFrame, from link:
+// https://discussions.udacity.com/t/optimizing-updatepositions-and-paint/40633/5
+window.animating = false;
+function animationReadyCheck() {
+  if ( !window.animating ) {
+    window.animating = true;
+    window.requestAnimationFrame(updatePositions);
+  }
 }
 
 // runs updatePositions on scroll
-window.addEventListener('scroll', updatePositions);
+window.addEventListener('scroll', animationReadyCheck);
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
@@ -527,9 +537,16 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
-    elem.basicLeft = (i % cols) * s;
+    // elem.basicLeft = (i % cols) * s;
+    // Because used transform instead of left, I change the basicleft to left
+    // reference: https://discussions.udacity.com/t/optimising-updatepositions-why-are-my-pizzas-clumped-together/40333
+    elem.style.left = (i % cols) * s + 'px';
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     document.querySelector("#movingPizzas1").appendChild(elem);
   }
-  updatePositions();
+  // instead using document.querySelectorAll('.mover'),
+  // getElementsByClassName is much better. And I put items from updatePositions here
+  window.items = document.getElementsByClassName('mover');
+  // avoid unnecessary recalculate layout by using requestAnimationFrame
+  animationReadyCheck();
 });
