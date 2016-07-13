@@ -422,6 +422,8 @@ var resizePizzas = function(size) {
   changeSliderLabel(size);
 
   // Iterates through pizza elements on the page and changes their widths
+  // use ratio instead of px to maintain tht size of pizza, solution from the course:
+  // styles and layout: stop FSL. From browser rendering optimization, by Cameron
   function changePizzaSizes(size) {
     var newWidth;
     switch(size) {
