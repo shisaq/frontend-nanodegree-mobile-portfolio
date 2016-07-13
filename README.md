@@ -4,7 +4,18 @@
   3. replace `style.left` by using `style.transform`;
   4. use `getElementsByClassName` to replace `querySelectorAll`;
   5. analyse the number of pizza and change it from 200 to 30;
-  6. compress images.
+  6. compress images;
+  7. use `getElementById` instead of `querySelectorAll`;
+  8. add `'use strict';` in `main.js` to avoid secure problems;
+  9. optimize for loop by storing data on initialize condition, [see reference](https://javascriptweblog.wordpress.com/2010/10/11/rethinking-javascript-for-loops/)
+  ```
+  for (var i = /** start value */, len = /** end value */; i < len; i++) {
+    /** Statements */
+  }
+  ```
+  10. cache `pizzasDiv` outside of the for loop;
+  11. calculate the rows and cols to make sure the number of pizza, instead just using 30;
+  12. Declaring the elem variable (var elem;) in the initialisation of the for-loop will prevent it from being created every time the loop is executed.
 
 ## Website Performance Optimization portfolio project
 

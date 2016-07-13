@@ -18,6 +18,13 @@ cameron *at* udacity *dot* com
 
 // As you may have realized, this website randomly generates pizzas.
 // Here are arrays of all possible pizza ingredients.
+
+// It is good practice to include the 'use strict'; tag in your function
+// definitions to enable the strict mode (even if the file was provided to you).
+// This mode helps to write more "secure" codes by preventing things such as
+// marking down a function with a bad syntax to execute or loading unused variables.
+'use strict';
+
 var pizzaIngredients = {};
 pizzaIngredients.meats = [
   "Pepperoni",
@@ -403,16 +410,17 @@ var resizePizzas = function(size) {
   window.performance.mark("mark_start_resize");   // User Timing API function
 
   // Changes the value for the size of the pizza above the slider
+  // use getElementById instead of querySelector
   function changeSliderLabel(size) {
     switch(size) {
       case "1":
-        document.querySelector("#pizzaSize").innerHTML = "Small";
+        document.getElementById("pizzaSize").innerHTML = "Small";
         return;
       case "2":
-        document.querySelector("#pizzaSize").innerHTML = "Medium";
+        document.getElementById("pizzaSize").innerHTML = "Medium";
         return;
       case "3":
-        document.querySelector("#pizzaSize").innerHTML = "Large";
+        document.getElementById("pizzaSize").innerHTML = "Large";
         return;
       default:
         console.log("bug in changeSliderLabel");
@@ -440,8 +448,10 @@ var resizePizzas = function(size) {
           console.log("bug in sizeSwitcher");
       }
 
-    var randomPizzas = document.querySelectorAll(".randomPizzaContainer");
-    for (var i = 0; i < randomPizzas.length; i++) {
+    // getElementByClassName is better than querySelectorAll
+    var randomPizzas = document.getElementsByClassName("randomPizzaContainer");
+    // optimize for loop by using pre-storing randomPizzas.length
+    for (var i = 0, len = randomPizzas.length; i < len; i++) {
       randomPizzas[i].style.width = newWidth + '%';
     }
   }
@@ -458,8 +468,8 @@ var resizePizzas = function(size) {
 window.performance.mark("mark_start_generating"); // collect timing data
 
 // This for-loop actually creates and appends all of the pizzas when the page loads
+var pizzasDiv = document.getElementById("randomPizzas");
 for (var i = 2; i < 100; i++) {
-  var pizzasDiv = document.getElementById("randomPizzas");
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
@@ -497,8 +507,8 @@ function updatePositions() {
   for (var i = 0; i < 5; i++) {
     phase[i] = 100 * Math.sin(cachedScrollTop + i);
   }
-
-  for (var i = 0; i < items.length; i++) {
+  // optimize for loop by using pre-storing items.length
+  for (var i = 0, len = items.length; i < len; i++) {
     // phase[i % 5] is used for picking the right cache of phase
     // change style.left to style.transform, and set the basic left inside DOMContentLoaded
     items[i].style.transform = 'translateX(' + phase[i % 5] + 'px)';
@@ -532,9 +542,14 @@ window.addEventListener('scroll', animationReadyCheck);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  // I think we don't need so many pizzas... 30 is enough...
-  for (var i = 0; i < 30; i++) {
-    var elem = document.createElement('img');
+  // I think we can calculate the rows and cols to make sure how many pizzas to make
+  var rows = window.screen.height / s;
+  var pizzaNum = rows * cols;
+  // Declaring the elem variable (var elem;) in the initialisation of the for-loop will
+  // prevent it from being created every time the loop is executed.
+  var elem;
+  for (var i = 0; i < pizzaNum; i++) {
+    elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
@@ -544,7 +559,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // reference: https://discussions.udacity.com/t/optimising-updatepositions-why-are-my-pizzas-clumped-together/40333
     elem.style.left = (i % cols) * s + 'px';
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    document.querySelector("#movingPizzas1").appendChild(elem);
+    // use getElementById
+    document.getElementById("movingPizzas1").appendChild(elem);
   }
   // instead using document.querySelectorAll('.mover'),
   // getElementsByClassName is much better. And I put items from updatePositions here
